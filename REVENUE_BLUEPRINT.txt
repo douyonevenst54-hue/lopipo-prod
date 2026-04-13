@@ -1,0 +1,100 @@
+LOPIPO REVENUE MODEL & BENCHMARKS
+
+=== REVENUE STREAMS ANALYSIS ===
+
+1. PRO SUBSCRIPTION (1 Pi/month)
+   - Model: SaaS Recurring
+   - Target: 10-20% of active users
+   - Benefits: Unlimited polls, 2x daily spins, early access
+   - MRR at 10k users: 1,000-2,000 Pi/month
+   - Retention: High (daily benefits + exclusivity)
+   - Psychology: Freemium → paid upgrade
+
+2. FEATURED POLLS (5 Pi per 24h pin)
+   - Model: Marketplace
+   - Target: Brands, influencers, creators
+   - Volume: 5-15 pins/day
+   - Daily Revenue: 25-75 Pi
+   - MRR: 750-2,250 Pi
+   - Psychology: FOMO, visibility competition
+
+3. GROUP LOTTERY FEE (5% of pot)
+   - Model: Transaction-based
+   - Triggers: Group pool payouts
+   - Example: 100 Pi pot → 5 Pi fee
+   - Scales with: TVL, user count, engagement
+   - MRR at $10k TVL: 500-1,000 Pi
+   - Psychology: Hidden fee, user still wins
+
+4. AD BANNER (CPM/CPC)
+   - Model: Performance-based
+   - Target: Pi Network ecosystem partners
+   - Typical: $0.50-2.00 CPM (crypto market rates)
+   - MRR at 100k impressions: 50-200 Pi
+   - Psychology: Non-intrusive, bottom-only placement
+
+=== TOTAL REVENUE POTENTIAL ===
+Conservative (10k active users):
+- Subscription: 1,000 Pi/month (10% adoption)
+- Featured polls: 750 Pi/month (10 pins/day)
+- Group fee: 500 Pi/month
+- Ads: 100 Pi/month
+- TOTAL: 2,350 Pi/month (~$235 at $0.10/Pi)
+
+Optimistic (50k active users):
+- Subscription: 5,000 Pi/month (20% adoption)
+- Featured polls: 2,250 Pi/month (15 pins/day)
+- Group fee: 2,000 Pi/month
+- Ads: 500 Pi/month
+- TOTAL: 9,750 Pi/month (~$975 at $0.10/Pi)
+
+=== BENCHMARK FEES (Pi Network Ecosystem) ===
+
+Subscription Tiers:
+- Free: Unlimited basic, 1 daily spin, 1 poll/day
+- Pro: 1 Pi/month → Unlimited polls, 2 daily spins, early access
+- Premium: 5 Pi/month → All Pro + priority support, leaderboard badge
+
+Poll Pinning:
+- Standard pin: 5 Pi for 24h (valid)
+- Featured pin: 10 Pi for 48h (premium placement)
+- VIP pin: 20 Pi for 7 days (top priority)
+
+Group Lottery Fees:
+- Solo lottery: 0% fee (keep 100%)
+- Group lottery: 5% fee (platform takes 5%, group keeps 95%)
+- Jackpot multiplier: 1.5x for groups (encourages participation)
+
+Ad Rates:
+- CPM (Cost Per 1000 impressions): 1-2 Pi
+- CPC (Cost Per Click): 0.1-0.5 Pi
+- Sponsored badge: 10 Pi/month
+
+=== IMPLEMENTATION PRIORITY ===
+
+Phase 1 (MVP): 
+- Pro subscription ✓ Highest ROI, lowest risk
+- Ad banner placement ✓ Already built
+
+Phase 2 (Growth):
+- Featured polls ✓ Unlock creator monetization
+- Group lottery fee ✓ Scales with TVL
+
+Phase 3 (Scale):
+- Premium tiers ✓ Expansion
+- Sponsorships ✓ Brand partnerships
+- API access ✓ Developer ecosystem
+
+=== USER PSYCHOLOGY PRICING ===
+
+Why these numbers work:
+- 1 Pi/month: Micro-commitment, low friction
+- 5 Pi for pin: Feels like marketing spend, not gambling
+- 5% fee on group: Imperceptible but adds up
+- Ads: Free tier subsidies premium
+
+Retention hooks:
+- Daily spin bonus (FOMO for lapsed users)
+- Leaderboard badges (status)
+- Poll creation limits (upgrade friction)
+- Early access to games (FOMO)

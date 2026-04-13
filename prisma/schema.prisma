@@ -1,0 +1,243 @@
+// Prisma Configuration for LoPiPo
+// Provides type-safe database access with managed migrations
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // Direct connection for migrations (bypasses pgBouncer)
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output = "./node_modules/.prisma/client"
+}
+
+// Core User Models
+model User {
+  id        String   @id @default(cuid())
+  piId      String   @unique
+  username  String   @unique
+  email     String?  @unique
+  avatar    String?
+  
+  // Profile
+  bio       String?
+  website   String?
+  
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  wallet    UserWallet?
+  profile   UserProfile?
+  tickets   LotteryTicket[]
+  polls     Poll[]
+  votes     PollVote[]
+  referrals Referral[] @relation("referrer")
+  referredBy Referral? @relation("referred")
+  
+  @@index([piId])
+  @@index([createdAt])
+}
+
+model UserWallet {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  balance             Decimal  @default(0) @db.Decimal(10, 4)
+  dailySpinsEarned    Decimal  @default(0) @db.Decimal(10, 4)
+  referralEarned      Decimal  @default(0) @db.Decimal(10, 4)
+  lotteryWon          Decimal  @default(0) @db.Decimal(10, 4)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([balance])
+  @@index([userId])
+}
+
+model UserProfile {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  dailyStreak         Int      @default(0)
+  totalLotteriesPlayed Int    @default(0)
+  totalPollsCreated   Int      @default(0)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([dailyStreak])
+}
+
+// Lottery Models
+model LotterySeries {
+  id        String   @id @default(cuid())
+  title     String
+  
+  prizePool Decimal  @db.Decimal(10, 4)
+  ticketPrice Decimal @db.Decimal(10, 4)
+  maxTickets Int
+  
+  status    String   @default("active") // active, drawing, completed
+  drawnAt   DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  tickets   LotteryTicket[]
+  winners   LotteryWinner[]
+  
+  @@index([status])
+  @@index([drawnAt])
+}
+
+model LotteryTicket {
+  id        String   @id @default(cuid())
+  
+  seriesId  String
+  userId    String
+  
+  purchasedAt DateTime @default(now())
+  
+  series    LotterySeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@index([seriesId])
+  @@index([userId])
+  @@index([purchasedAt])
+}
+
+model LotteryWinner {
+  id        String   @id @default(cuid())
+  
+  seriesId  String
+  userId    String
+  
+  piWon     Decimal  @db.Decimal(10, 4)
+  ticketsWon Int
+  
+  drawnAt   DateTime @default(now())
+  payoutStatus String @default("completed") // pending, completed, failed
+  
+  series    LotterySeries @relation(fields: [seriesId], references: [id], onDelete: Cascade)
+  
+  @@index([seriesId])
+  @@index([payoutStatus])
+  @@index([drawnAt])
+}
+
+// Poll Models
+model Poll {
+  id        String   @id @default(cuid())
+  
+  title     String
+  description String?
+  creatorId String
+  
+  options   String[] // JSON array of poll options
+  
+  featured  Boolean  @default(false)
+  featuredUntil DateTime?
+  
+  status    String   @default("active") // active, closed, archived
+  closedAt  DateTime?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  votes     PollVote[]
+  
+  @@index([creatorId])
+  @@index([featured])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model PollVote {
+  id        String   @id @default(cuid())
+  
+  pollId    String
+  userId    String
+  
+  optionIndex Int
+  
+  votedAt   DateTime @default(now())
+  
+  poll      Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([pollId, userId]) // One vote per user per poll
+  @@index([pollId])
+  @@index([userId])
+}
+
+// Referral Models
+model Referral {
+  id        String   @id @default(cuid())
+  
+  referrerId String
+  referredId String
+  
+  code      String   @unique
+  
+  createdAt DateTime @default(now())
+  
+  referrer  User     @relation("referrer", fields: [referrerId], references: [id], onDelete: Cascade)
+  referred  User     @relation("referred", fields: [referredId], references: [id], onDelete: Cascade)
+  
+  @@index([referrerId])
+  @@index([code])
+}
+
+// Subscription Models
+model Subscription {
+  id        String   @id @default(cuid())
+  
+  userId    String   @unique
+  status    String   @default("active") // active, cancelled, expired
+  
+  tier      String   @default("pro") // pro
+  amount    Decimal  @db.Decimal(10, 4)
+  
+  startedAt DateTime @default(now())
+  expiresAt DateTime
+  
+  @@index([status])
+  @@index([expiresAt])
+}
+
+// Daily Spin Model
+model DailySpin {
+  id        String   @id @default(cuid())
+  
+  userId    String
+  username  String
+  
+  claimedAt DateTime @default(now())
+  streakCount Int
+  piReward  Decimal  @default(0.001) @db.Decimal(10, 4)
+  
+  @@index([userId])
+  @@index([claimedAt])
+}
+
+// Push Subscription Model
+model PushSubscription {
+  id        String   @id @default(cuid())
+  
+  userId    String
+  endpoint  String
+  auth      String
+  p256dh    String
+  
+  subscribedAt DateTime @default(now())
+  
+  @@unique([userId, endpoint])
+  @@index([userId])
+}
